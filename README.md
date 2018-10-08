@@ -9,7 +9,6 @@
 
 This repository will provides helpers related to DockerHub.
 
-
 ## Development
 
 Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.8. It is also possible to just simply execute the `go get github.com/webhippie/go-dockerhub/...` command, but we prefer to use our `Makefile`:
@@ -19,7 +18,6 @@ go get -d github.com/webhippie/go-dockerhub/...
 cd $GOPATH/src/github.com/webhippie/go-dockerhub
 make retool sync clean generate test
 ```
-
 
 ## Examples
 
@@ -38,26 +36,21 @@ func main() {
 }
 ```
 
-
 ## Security
 
 If you find a security issue please contact thomas@webhippie.de first.
-
 
 ## Contributing
 
 Fork -> Patch -> Push -> Pull Request
 
-
 ## Authors
 
 * [Thomas Boerger](https://github.com/tboerger)
 
-
 ## License
 
 Apache-2.0
-
 
 ## Copyright
 
