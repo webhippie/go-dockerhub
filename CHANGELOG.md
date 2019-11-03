@@ -1,7 +1,17 @@
-# Changelog
+# Changelog for unreleased
 
-## [0.1.0] - 2018-10-08
+The following sections list the changes for unreleased.
 
-### Added
+## Summary
 
-* Initial release
+ * Chg #1: Initial release of basic version
+
+## Details
+
+ * Change #1: Initial release of basic version
+
+   Just prepare an initial version to gather namespace and repository details from the API.
+
+   https://github.com/webhippie/go-dockerhub/issues/1
+
+

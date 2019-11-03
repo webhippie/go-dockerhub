@@ -1,14 +1,9 @@
+SHELL := bash
 NAME := go-dockerhub
 IMPORT := github.com/webhippie/$(NAME)
 
-ifeq ($(OS), Windows_NT)
-	HAS_RETOOL := $(shell where retool)
-else
-	HAS_RETOOL := $(shell command -v retool)
-endif
-
-PACKAGES ?= $(shell go list ./... | grep -v /vendor/ | grep -v /_tools/)
-SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*" -not -path "./_tools/*")
+PACKAGES ?= $(shell go list ./...)
+SOURCES ?= $(shell find . -name "*.go" -type f)
 GENERATE ?= $(PACKAGES)
 
 TAGS ?=
@@ -17,13 +12,9 @@ LDFLAGS += -s -w
 .PHONY: all
 all: build
 
-.PHONY: update
-update:
-	retool do dep ensure -update
-
 .PHONY: sync
 sync:
-	retool do dep ensure
+	go mod download
 
 .PHONY: clean
 clean:
@@ -37,34 +28,30 @@ fmt:
 vet:
 	go vet $(PACKAGES)
 
-.PHONY: megacheck
-megacheck:
-	retool do megacheck -tags '$(TAGS)' $(PACKAGES)
+.PHONY: staticcheck
+staticcheck:
+	go run honnef.co/go/tools/cmd/staticcheck -tags '$(TAGS)' $(PACKAGES)
 
 .PHONY: lint
 lint:
-	for PKG in $(PACKAGES); do retool do golint -set_exit_status $$PKG || exit 1; done;
+	for PKG in $(PACKAGES); do go run golang.org/x/lint/golint -set_exit_status $$PKG || exit 1; done;
 
 .PHONY: generate
 generate:
-	retool do go generate $(GENERATE)
+	go generate $(GENERATE)
 
 .PHONY: embedmd
 embedmd:
-	retool do embedmd -w README.md
+	go run github.com/campoy/embedmd -w README.md
+
+.PHONY: changelog
+changelog:
+	go run github.com/restic/calens >| CHANGELOG.md
 
 .PHONY: test
 test:
-	retool do goverage -v -coverprofile coverage.out $(PACKAGES)
+	go run github.com/haya14busa/goverage -v -coverprofile coverage.out $(PACKAGES)
 
 .PHONY: build
 build: $(SOURCES)
 	go build -i -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' ./...
-
-.PHONY: retool
-retool:
-ifndef HAS_RETOOL
-	go get -u github.com/twitchtv/retool
-endif
-	retool sync
-	retool build
